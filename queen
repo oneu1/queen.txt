@@ -1,0 +1,64 @@
+function solveNQueens(n)
+    board = zeros(n, n);
+    if solve(board, 1, n) == %F then
+        disp("Solution does not exist");
+    else
+        disp("Solution found:");
+        displayBoard(board);
+    end
+endfunction
+
+function result = solve(board, row, n)
+    if row > n then
+        result = %T;
+        return;
+    end
+    
+    for col = 1:n
+        if isSafe(board, row, col, n) then
+            board(row, col) = 1;
+            if solve(board, row + 1, n) then
+                result = %T;
+                return;
+            end
+            board(row, col) = 0;
+        end
+    end
+    result = %F;
+endfunction
+
+function safe = isSafe(board, row, col, n)
+    for i = 1:row-1
+        if board(i, col) == 1 then
+            safe = %F;
+            return;
+        end
+        if col - (row - i) >= 1 & board(i, col - (row - i)) == 1 then
+            safe = %F;
+            return;
+        end
+        if col + (row - i) <= n & board(i, col + (row - i)) == 1 then
+            safe = %F;
+            return;
+        end
+    end
+    safe = %T;
+endfunction
+
+function displayBoard(board)
+    [n, m] = size(board);
+    for i = 1:n
+        for j = 1:m
+            if board(i, j) == 1 then
+                printf("Q ");
+            else
+                printf(". ");
+            end
+        end
+        printf("\n");
+    end
+endfunction
+
+// Test with a 4-Queens problem
+n = 4;
+solveNQueens(n);
